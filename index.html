@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Stars</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div id="startScreen">
+            <h1>Catch the Falling Stars</h1>
+            <button id="startButton">Start Game</button>
+        </div>
+        <div class="game-content hidden">
+            <div class="game-header">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="high-score">High Score: <span id="highScore">0</span></div>
+                <div class="lives">Lives: <span id="lives">5</span></div>
+            </div>
+            <div id="gameArea">
+                <div id="basket"></div>
+            </div>
+            <div id="gameOver" class="hidden">
+                <h2>Game Over!</h2>
+                <p>Final Score: <span id="finalScore">0</span></p>
+                <button id="restartButton">Play Again</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
