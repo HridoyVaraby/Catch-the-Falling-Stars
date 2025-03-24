@@ -47,6 +47,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastHeartSpawnTime = 0;
     const heartSpawnRate = 15000; // Spawn heart every 15 seconds
+    
+    let lastDebrisSpawnTime = 0;
+    const debrisSpawnRate = 3000; // Spawn debris every 3 seconds
+
+    function createDebris() {
+        const debris = document.createElement('div');
+        debris.className = 'debris';
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const debrisWidth = 40;
+        const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
+        debris.style.left = randomX + 'px';
+        debris.style.top = '0px';
+        gameArea.appendChild(debris);
+
+        stars.push({
+            element: debris,
+            x: randomX,
+            y: 0,
+            speed: gameSpeed * 1.1,
+            points: -2,
+            isDebris: true
+        });
+    }
 
     function createHeart() {
         const heart = document.createElement('div');
@@ -136,13 +159,20 @@ document.addEventListener('DOMContentLoaded', () => {
             lastHeartSpawnTime = currentTime;
         }
 
+        if (currentTime - lastDebrisSpawnTime > debrisSpawnRate) {
+            createDebris();
+            lastDebrisSpawnTime = currentTime;
+        }
+
         stars = stars.filter(star => {
             const isFallen = moveStar(star);
             if (isFallen) {
                 gameArea.removeChild(star.element);
-                lives--;
-                livesElement.textContent = lives;
-                if (lives <= 0) endGame();
+                if (!star.isDebris) {
+                    lives--;
+                    livesElement.textContent = lives;
+                    if (lives <= 0) endGame();
+                }
                 return false;
             }
 
@@ -151,6 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (star.isHeart) {
                     lives++;
                     livesElement.textContent = lives;
+                } else if (star.isDebris) {
+                    score = Math.max(0, score + star.points);
+                    scoreElement.textContent = score;
                 } else {
                     score += star.points;
                     scoreElement.textContent = score;
