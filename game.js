@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const rect = gameArea.getBoundingClientRect();
             const relativeX = clientX - rect.left;
-            basketPosition = Math.max(0, Math.min(relativeX - basketWidth / 2, gameAreaRect.width - basketWidth));
+            basketPosition = Math.max(0, Math.min(relativeX, gameAreaRect.width - basketWidth));
         } else if (e.type === 'keydown') {
             if (e.key === 'ArrowLeft') {
                 basketPosition = Math.max(basketPosition - speed, 0);
@@ -43,6 +43,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         basket.style.left = basketPosition + 'px';
+    }
+
+    let lastHeartSpawnTime = 0;
+    const heartSpawnRate = 15000; // Spawn heart every 15 seconds
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '<img src="assets/heart.svg" width="30" height="30">';
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const heartWidth = 30;
+        const randomX = Math.random() * (gameAreaRect.width - heartWidth - 10) + 5;
+        heart.style.left = randomX + 'px';
+        heart.style.top = '0px';
+        gameArea.appendChild(heart);
+
+        stars.push({
+            element: heart,
+            x: randomX,
+            y: 0,
+            speed: gameSpeed * 0.8,
+            points: 0,
+            isHeart: true
+        });
     }
 
     function createStar() {
@@ -107,6 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
             lastSpawnTime = currentTime;
         }
 
+        if (currentTime - lastHeartSpawnTime > heartSpawnRate) {
+            createHeart();
+            lastHeartSpawnTime = currentTime;
+        }
+
         stars = stars.filter(star => {
             const isFallen = moveStar(star);
             if (isFallen) {
@@ -119,9 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (checkCollision(star)) {
                 gameArea.removeChild(star.element);
-                score++;
-                scoreElement.textContent = score;
-                increaseDifficulty();
+                if (star.isHeart) {
+                    lives++;
+                    livesElement.textContent = lives;
+                } else {
+                    score += star.points;
+                    scoreElement.textContent = score;
+                    increaseDifficulty();
+                }
+                catchSound.play();
                 return false;
             }
             return true;
@@ -141,6 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endGame() {
         isGameOver = true;
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        gameOverSound.play();
         finalScoreElement.textContent = score;
         gameOverScreen.classList.remove('hidden');
 
@@ -156,7 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function startGame() {
+    const bgMusic = new Audio('assets/audio/background-music.mp3');
+const catchSound = new Audio('assets/audio/catch-star.mp3');
+const gameOverSound = new Audio('assets/audio/game-over.mp3');
+
+bgMusic.loop = true;
+
+function startGame() {
         score = 0;
         lives = 5;
         gameSpeed = 2;
@@ -170,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startScreen.classList.add('hidden');
         gameContent.classList.remove('hidden');
         lastSpawnTime = Date.now();
+        bgMusic.play();
         requestAnimationFrame(updateGame);
     }
 
