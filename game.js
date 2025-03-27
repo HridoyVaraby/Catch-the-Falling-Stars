@@ -50,6 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let lastDebrisSpawnTime = 0;
     const debrisSpawnRate = 3000; // Spawn debris every 3 seconds
+    
+    let lastDangerousDebrisSpawnTime = 0;
+    const dangerousDebrisSpawnRate = 5000; // Spawn dangerous debris every 5 seconds
 
     function createDebris() {
         const debris = document.createElement('div');
@@ -68,6 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
             speed: gameSpeed * 1.1,
             points: -2,
             isDebris: true
+        });
+    }
+    
+    function createDangerousDebris() {
+        const dangerousDebris = document.createElement('div');
+        dangerousDebris.className = 'dangerous-debris';
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const debrisWidth = 40;
+        const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
+        dangerousDebris.style.left = randomX + 'px';
+        dangerousDebris.style.top = '0px';
+        gameArea.appendChild(dangerousDebris);
+
+        stars.push({
+            element: dangerousDebris,
+            x: randomX,
+            y: 0,
+            speed: gameSpeed * 1.3,
+            points: -4,
+            isDebris: true,
+            isDangerous: true
         });
     }
 
@@ -163,6 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
             createDebris();
             lastDebrisSpawnTime = currentTime;
         }
+        
+        if (currentTime - lastDangerousDebrisSpawnTime > dangerousDebrisSpawnRate) {
+            createDangerousDebris();
+            lastDangerousDebrisSpawnTime = currentTime;
+        }
 
         stars = stars.filter(star => {
             const isFallen = moveStar(star);
@@ -247,6 +276,9 @@ function startGame() {
         startScreen.classList.add('hidden');
         gameContent.classList.remove('hidden');
         lastSpawnTime = Date.now();
+        lastHeartSpawnTime = Date.now();
+        lastDebrisSpawnTime = Date.now();
+        lastDangerousDebrisSpawnTime = Date.now();
         bgMusic.play();
         requestAnimationFrame(updateGame);
     }
