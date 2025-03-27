@@ -150,6 +150,43 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
+@media screen and (max-width: 768px) {
+    .game-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .game-header {
+        padding: 10px;
+        font-size: 18px;
+    }
+
+    #basket {
+        width: 60px;
+        height: 60px;
+        bottom: 10px;
+    }
+
+    .star, .heart, .debris {
+        width: 20px;
+        height: 20px;
+    }
+
+    #startScreen h1 {
+        font-size: 36px;
+    }
+
+    #startButton, #restartButton {
+        padding: 10px 20px;
+        font-size: 18px;
+    }
+
+    #gameOver h2 {
+        font-size: 28px;
+    }
+}
+
 #startScreen, #gameOver {
     position: absolute;
     top: 50%;
