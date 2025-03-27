@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createHeart() {
         const heart = document.createElement('div');
         heart.className = 'heart';
-        heart.innerHTML = '<img src="assets/heart.svg" width="30" height="30">';
+        heart.innerHTML = '<img src="assets/images/heart.svg" width="30" height="30">';
         const gameAreaRect = gameArea.getBoundingClientRect();
         const heartWidth = 30;
         const randomX = Math.random() * (gameAreaRect.width - heartWidth - 10) + 5;
