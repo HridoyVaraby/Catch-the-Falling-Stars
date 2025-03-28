@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catch the Falling Stars</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,10 +14,10 @@
             <button id="startButton">Start Game</button>
         </div>
         <div class="game-content hidden">
-            <div class="game-header">
-                <div class="score">Score: <span id="score">0</span></div>
-                <div class="high-score">High Score: <span id="highScore">0</span></div>
-                <div class="lives">Lives: <span id="lives">5</span></div>
+            <div class="game-header backdrop-blur-md bg-black/30 p-4 rounded-t-lg border-b border-white/10 shadow-lg">
+                <div class="score font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500">Score: <span id="score" class="text-2xl">0</span></div>
+                <div class="high-score font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">High Score: <span id="highScore" class="text-2xl">0</span></div>
+                <div class="lives font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Lives: <span id="lives" class="text-2xl">5</span></div>
             </div>
             <div id="gameArea">
                 <div id="basket"></div>

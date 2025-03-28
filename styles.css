@@ -36,15 +36,32 @@ body {
 .game-header {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
-    color: white;
     font-size: 24px;
-    background: rgba(0, 0, 0, 0.3);
     z-index: 2;
+    transition: all 0.3s ease;
 }
 
 .game-header > div {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.game-header > div:hover {
+    transform: scale(1.05);
+}
+
+#score, #highScore, #lives {
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#score.updated, #lives.updated {
+    animation: scoreUpdate 0.5s ease;
+}
+
+@keyframes scoreUpdate {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
 }
 
 #gameArea {
