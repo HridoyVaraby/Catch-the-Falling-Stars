@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameLoop;
     let stars = [];
     let basketPosition = gameArea.clientWidth / 2;
+    let targetBasketPosition = basketPosition;
+    let basketVelocity = 0;
     let isGameOver = false;
     let highScore = parseInt(localStorage.getItem('highScore')) || 0;
     highScoreElement.textContent = highScore;
@@ -34,15 +36,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const rect = gameArea.getBoundingClientRect();
             const relativeX = clientX - rect.left;
-            basketPosition = Math.max(0, Math.min(relativeX, gameAreaRect.width - basketWidth));
+            targetBasketPosition = Math.max(0, Math.min(relativeX, gameAreaRect.width - basketWidth));
         } else if (e.type === 'keydown') {
             if (e.key === 'ArrowLeft') {
-                basketPosition = Math.max(basketPosition - speed, 0);
+                targetBasketPosition = Math.max(targetBasketPosition - speed, 0);
             } else if (e.key === 'ArrowRight') {
-                basketPosition = Math.min(basketPosition + speed, gameAreaRect.width - basketWidth);
+                targetBasketPosition = Math.min(targetBasketPosition + speed, gameAreaRect.width - basketWidth);
             }
         }
+    }
+
+    function smoothBasketMovement() {
+        const easing = 0.15;
+        const distance = targetBasketPosition - basketPosition;
+        basketVelocity = basketVelocity * 0.8 + distance * easing;
+        basketPosition += basketVelocity;
         basket.style.left = basketPosition + 'px';
+        
+        if (!isGameOver) {
+            requestAnimationFrame(smoothBasketMovement);
+        }
     }
 
     let lastHeartSpawnTime = 0;
@@ -281,6 +294,7 @@ function startGame() {
         lastDangerousDebrisSpawnTime = Date.now();
         bgMusic.play();
         requestAnimationFrame(updateGame);
+        requestAnimationFrame(smoothBasketMovement);
     }
 
     document.addEventListener('keydown', updateBasketPosition);
