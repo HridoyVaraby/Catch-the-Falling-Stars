@@ -297,6 +297,15 @@ function startGame() {
         requestAnimationFrame(smoothBasketMovement);
     }
 
+    const homeButton = document.getElementById('homeButton');
+    homeButton.addEventListener('click', () => {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        gameOverScreen.classList.add('hidden');
+        gameContent.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+    });
+
     document.addEventListener('keydown', updateBasketPosition);
     gameArea.addEventListener('mousemove', updateBasketPosition);
     gameArea.addEventListener('touchmove', updateBasketPosition, { passive: false });
