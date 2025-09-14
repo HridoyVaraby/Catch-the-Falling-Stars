@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateBasketPosition(e) {
         if (isGameOver) return;
-        const speed = 15;
+        const speed = 20; // Increased speed for better responsiveness
         const gameAreaRect = gameArea.getBoundingClientRect();
         const basketWidth = basket.offsetWidth;
 
@@ -84,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const rect = gameArea.getBoundingClientRect();
             const relativeX = clientX - rect.left;
-            targetBasketPosition = Math.max(0, Math.min(relativeX, gameAreaRect.width - basketWidth));
+            // Center the basket on the touch/mouse position
+            targetBasketPosition = Math.max(basketWidth/2, Math.min(relativeX, gameAreaRect.width - basketWidth/2)) - basketWidth/2;
         } else if (e.type === 'keydown') {
             if (e.key === 'ArrowLeft') {
                 targetBasketPosition = Math.max(targetBasketPosition - speed, 0);
@@ -95,9 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function smoothBasketMovement() {
-        const easing = 0.15;
+        const easing = 0.2; // Increased easing for more responsive movement
         const distance = targetBasketPosition - basketPosition;
-        basketVelocity = basketVelocity * 0.8 + distance * easing;
+        basketVelocity = basketVelocity * 0.7 + distance * easing; // Slightly less dampening
         basketPosition += basketVelocity;
         basket.style.left = basketPosition + 'px';
         
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const debris = document.createElement('div');
         debris.className = 'debris';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const debrisWidth = 40;
+        const debrisWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
         debris.style.left = randomX + 'px';
         debris.style.top = '0px';
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dangerousDebris = document.createElement('div');
         dangerousDebris.className = 'dangerous-debris';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const debrisWidth = 40;
+        const debrisWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
         dangerousDebris.style.left = randomX + 'px';
         dangerousDebris.style.top = '0px';
@@ -159,9 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createHeart() {
         const heart = document.createElement('div');
         heart.className = 'heart';
-        heart.innerHTML = '<img src="assets/images/heart.svg" width="30" height="30">';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const heartWidth = 30;
+        const heartWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - heartWidth - 10) + 5;
         heart.style.left = randomX + 'px';
         heart.style.top = '0px';
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const starType = starTypes[Math.floor(Math.random() * starTypes.length)];
         star.className = `star star-${starType}`;
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const starWidth = 30;
+        const starWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - starWidth - 10) + 5;
         star.style.left = randomX + 'px';
         star.style.top = '0px';
@@ -351,7 +351,22 @@ function startGame() {
     document.addEventListener('keydown', updateBasketPosition);
     gameArea.addEventListener('mousemove', updateBasketPosition);
     gameArea.addEventListener('touchmove', updateBasketPosition, { passive: false });
-    gameArea.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+    gameArea.addEventListener('touchstart', updateBasketPosition, { passive: false });
+    gameArea.addEventListener('touchend', e => e.preventDefault(), { passive: false });
+    
+    // Prevent context menu on long touch
+    gameArea.addEventListener('contextmenu', e => e.preventDefault());
+    
+    // Handle window resize for responsive gameplay
+    window.addEventListener('resize', () => {
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const basketWidth = basket.offsetWidth;
+        if (basketPosition > gameAreaRect.width - basketWidth) {
+            basketPosition = gameAreaRect.width - basketWidth;
+            targetBasketPosition = basketPosition;
+        }
+    });
+    
     restartButton.addEventListener('click', startGame);
     startButton.addEventListener('click', startGame);
 });
