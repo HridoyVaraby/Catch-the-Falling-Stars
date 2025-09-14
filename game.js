@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContent = document.querySelector('.game-content');
     const musicVolume = document.getElementById('musicVolume');
     const sfxVolume = document.getElementById('sfxVolume');
-    const settingsButton = document.getElementById('settingsButton'); // Added settings button reference
+    const settingsButton = document.getElementById('settingsButton');
 
     let score = 0;
     let lives = 5;
@@ -373,4 +373,13 @@ function startGame() {
     
     restartButton.addEventListener('click', startGame);
     startButton.addEventListener('click', startGame);
+    
+    // Handle settings button click to force fresh page load
+    if (settingsButton) {
+        settingsButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Add timestamp to force fresh page load and prevent scroll restoration
+            window.location.href = 'settings.html?t=' + Date.now() + '#top';
+        });
+    }
 });

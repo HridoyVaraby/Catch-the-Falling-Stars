@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
+    <meta name="format-detection" content="telephone=no">
     <title>Game Settings - Catch the Falling Stars</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
@@ -16,9 +19,13 @@
             min-height: 100vh;
             min-height: 100dvh;
             padding: 0;
-            overflow-y: auto; /* Allow vertical scrolling */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: auto;
+            /* Allow vertical scrolling */
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+            scroll-behavior: smooth;
         }
+
         .settings-container {
             max-width: 100%;
             margin: 0;
@@ -31,7 +38,10 @@
             color: white;
             min-height: 100vh;
             min-height: 100dvh;
+            padding-top: 20px;
+            /* Reduced padding since back button is removed */
         }
+
         @media screen and (min-width: 481px) {
             .settings-container {
                 max-width: 600px;
@@ -41,13 +51,17 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
                 min-height: auto;
+                padding-top: 2rem;
             }
         }
+
         @media screen and (min-width: 769px) {
             .settings-container {
                 max-width: 800px;
+                padding-top: 2rem;
             }
         }
+
         .settings-section {
             margin-bottom: 1.5rem;
             padding: 1rem;
@@ -55,6 +69,7 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         @media screen and (min-width: 481px) {
             .settings-section {
                 margin-bottom: 2rem;
@@ -62,42 +77,15 @@
                 border-radius: 16px;
             }
         }
-        .back-button {
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 14px;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            z-index: 20;
-        }
-        @media screen and (min-width: 481px) {
-            .back-button {
-                top: 16px;
-                left: 16px;
-                padding: 0.5rem 1rem;
-                font-size: 16px;
-                min-height: 44px;
-            }
-        }
-        .back-button:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
+
         h1 {
             font-size: 24px !important;
             margin-bottom: 1.5rem !important;
-            margin-top: 3rem;
+            margin-top: 0;
+            text-align: center;
+            /* Center the heading since there's no back button */
         }
+
         @media screen and (min-width: 481px) {
             h1 {
                 font-size: 32px !important;
@@ -105,72 +93,169 @@
                 margin-top: 0;
             }
         }
+
         @media screen and (min-width: 769px) {
             h1 {
                 font-size: 36px !important;
             }
         }
+
         h2 {
             font-size: 18px !important;
         }
+
         @media screen and (min-width: 481px) {
             h2 {
                 font-size: 20px !important;
             }
         }
+
         @media screen and (min-width: 769px) {
             h2 {
                 font-size: 24px !important;
             }
         }
+
         h3 {
             font-size: 16px !important;
         }
+
         @media screen and (min-width: 481px) {
             h3 {
                 font-size: 18px !important;
             }
         }
-        .space-y-4 > * + * {
+
+        .space-y-4>*+* {
             margin-top: 0.75rem;
         }
+
         @media screen and (min-width: 481px) {
-            .space-y-4 > * + * {
+            .space-y-4>*+* {
                 margin-top: 1rem;
+            }
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-2px);
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: #FFD700;
+        }
+
+        /* Comprehensive scroll and layout fixes */
+        html {
+            scroll-padding-top: 0;
+            scroll-behavior: auto;
+            /* Disable smooth scrolling that might interfere */
+            overflow-x: hidden;
+        }
+
+        /* Ensure body starts at top */
+        body {
+            scroll-behavior: auto;
+            position: relative;
+        }
+
+        /* Prevent any elements from causing initial scroll */
+        * {
+            scroll-margin-top: 0;
+            scroll-snap-margin-top: 0;
+        }
+
+        /* Mobile-specific fixes */
+        @media screen and (max-width: 480px) {
+
+            html,
+            body {
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            .settings-container {
+                position: relative;
+                top: 0;
+                transform: none;
+                margin-top: 0;
+                padding-top: 10px;
+                /* Minimal top padding */
+            }
+
+            /* Ensure the first heading is visible at the top */
+            .settings-container h1 {
+                margin-top: 0;
+                padding-top: 0;
             }
         }
     </style>
 </head>
+
 <body>
-    <a href="index.html" class="back-button">← Back to Game</a>
+    <a id="top" style="position: absolute; top: 0; left: 0; visibility: hidden;"></a>
     <div class="settings-container">
-        <h1 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 text-transparent bg-clip-text">Game Settings</h1>
-        
+        <div class="flex items-center justify-between mb-6">
+            <button onclick="window.location.href='index.html'" class="back-button" aria-label="Back to game">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 19-7-7 7-7" />
+                    <path d="M19 12H5" />
+                </svg>
+            </button>
+            <h1
+                class="text-3xl font-bold text-center bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 text-transparent bg-clip-text flex-1">
+                Game Settings</h1>
+            <div class="w-10"></div> <!-- Spacer for centering -->
+        </div>
+
         <div class="settings-section">
-            <h2 class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">Audio Settings</h2>
+            <h2
+                class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+                Audio Settings</h2>
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-4 py-2 bg-white/10 rounded-lg">
-                    <label class="text-white/90">Music Volume</label>
+                    <label class="text-white/90" for="musicVolume">Music Volume</label>
                     <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="0.5" class="w-32">
                 </div>
                 <div class="flex items-center justify-between px-4 py-2 bg-white/10 rounded-lg">
-                    <label class="text-white/90">Sound Effects</label>
+                    <label class="text-white/90" for="sfxVolume">Sound Effects</label>
                     <input type="range" id="sfxVolume" min="0" max="1" step="0.1" value="0.5" class="w-32">
                 </div>
             </div>
         </div>
 
         <div class="settings-section">
-            <h2 class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">How to Play</h2>
+            <h2
+                class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
+                How to Play</h2>
             <div class="space-y-4 text-white/80">
                 <div class="p-4 bg-white/10 rounded-lg">
                     <h3 class="text-xl font-semibold mb-2">Basic Controls</h3>
                     <ul class="list-disc list-inside space-y-2">
                         <li>Use <span class="text-yellow-400">Left and Right Arrow Keys</span> to move the basket</li>
-                        <li>Alternatively, use your <span class="text-yellow-400">Mouse</span> to control the basket movement</li>
+                        <li>Alternatively, use your <span class="text-yellow-400">Mouse</span> to control the basket
+                            movement</li>
                     </ul>
                 </div>
-                
+
                 <div class="p-4 bg-white/10 rounded-lg">
                     <h3 class="text-xl font-semibold mb-2">Game Elements</h3>
                     <ul class="list-disc list-inside space-y-2">
@@ -197,5 +282,106 @@
         </div>
     </div>
     <script src="settings.js"></script>
+    <!-- Enhanced script to ensure page loads at the top -->
+    <script>
+        // Comprehensive mobile scroll fix
+        function forceScrollToTop() {
+            // Disable scroll restoration immediately
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+
+            // Clear any existing hash that might cause scrolling
+            if (window.location.hash && window.location.hash !== '#top') {
+                history.replaceState(null, null, window.location.pathname + window.location.search + '#top');
+            }
+
+            // Multiple scroll methods for maximum compatibility
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            window.scroll(0, 0);
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+
+            // Force layout recalculation
+            document.body.offsetHeight;
+
+            // Additional mobile-specific scroll reset
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', () => {
+                    window.scrollTo(0, 0);
+                });
+            }
+
+            // Force focus to top element to ensure we're at the top
+            const topElement = document.getElementById('top');
+            if (topElement) {
+                topElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+            }
+        }
+
+        // Execute immediately - before any other scripts
+        forceScrollToTop();
+
+        // Prevent any scroll restoration
+        window.addEventListener('beforeunload', () => {
+            window.scrollTo(0, 0);
+        });
+
+        // Handle page visibility changes (mobile app switching)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                setTimeout(forceScrollToTop, 50);
+            }
+        });
+
+        // Execute on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', forceScrollToTop);
+        } else {
+            forceScrollToTop();
+        }
+
+        // Execute on window load
+        window.addEventListener('load', forceScrollToTop);
+
+        // Handle page show (including back/forward navigation)
+        window.addEventListener('pageshow', function (event) {
+            forceScrollToTop();
+        });
+
+        // Handle focus events (when returning to the page)
+        window.addEventListener('focus', forceScrollToTop);
+
+        // Multiple delayed executions for stubborn mobile browsers
+        setTimeout(forceScrollToTop, 0);
+        setTimeout(forceScrollToTop, 50);
+        setTimeout(forceScrollToTop, 100);
+        setTimeout(forceScrollToTop, 200);
+        setTimeout(forceScrollToTop, 500);
+        setTimeout(forceScrollToTop, 1000);
+
+        // Continuous monitoring for the first few seconds
+        let scrollCheckCount = 0;
+        const scrollChecker = setInterval(() => {
+            if (window.scrollY > 0) {
+                forceScrollToTop();
+            }
+            scrollCheckCount++;
+            if (scrollCheckCount > 20) { // Stop after 2 seconds (20 * 100ms)
+                clearInterval(scrollChecker);
+            }
+        }, 100);
+
+        // Additional check for URL parameters indicating fresh navigation
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('t')) {
+            // This is a fresh navigation from the game, ensure we're at the top
+            forceScrollToTop();
+            // Remove the timestamp parameter from URL for cleaner appearance
+            const cleanUrl = window.location.pathname + (window.location.hash || '#top');
+            history.replaceState(null, null, cleanUrl);
+        }
+    </script>
 </body>
+
 </html>

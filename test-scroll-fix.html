@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Scroll Fix Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 200vh; /* Make page scrollable */
+        }
+        .test-section {
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .highlight {
+            background: yellow;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="highlight">
+        <strong>TOP OF PAGE - Volume Controls Should Be Here</strong>
+    </div>
+    
+    <div class="test-section">
+        <h2>Audio Settings</h2>
+        <p>Music Volume: <input type="range" min="0" max="100" value="50"></p>
+        <p>Sound Effects: <input type="range" min="0" max="100" value="50"></p>
+    </div>
+    
+    <div class="test-section">
+        <h2>How to Play</h2>
+        <p>This section was showing first on mobile instead of the volume controls above.</p>
+        <p>The fix ensures users always see the top of the page when they click the settings button.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <ol>
+            <li>Open this page on mobile</li>
+            <li>Scroll down to this section</li>
+            <li>Navigate away and come back</li>
+            <li>You should see the "TOP OF PAGE" section, not this one</li>
+        </ol>
+    </div>
+    
+    <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background: rgba(255,0,0,0.2);">
+        <p>More content to make the page scrollable...</p>
+    </div>
+    
+    <script>
+        // Apply the same scroll fix as in settings.html
+        function forceScrollToTop() {
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+            
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            window.scroll(0, 0);
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            
+            document.body.offsetHeight;
+        }
+        
+        forceScrollToTop();
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', forceScrollToTop);
+        } else {
+            forceScrollToTop();
+        }
+        
+        window.addEventListener('load', forceScrollToTop);
+        window.addEventListener('pageshow', forceScrollToTop);
+        window.addEventListener('focus', forceScrollToTop);
+        
+        setTimeout(forceScrollToTop, 0);
+        setTimeout(forceScrollToTop, 50);
+        setTimeout(forceScrollToTop, 100);
+        setTimeout(forceScrollToTop, 500);
+        
+        let scrollCheckCount = 0;
+        const scrollChecker = setInterval(() => {
+            if (window.scrollY > 0) {
+                forceScrollToTop();
+            }
+            scrollCheckCount++;
+            if (scrollCheckCount > 20) {
+                clearInterval(scrollChecker);
+            }
+        }, 100);
+    </script>
+</body>
+</html>
