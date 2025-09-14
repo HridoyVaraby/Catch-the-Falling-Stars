@@ -1,8 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Create audio elements
+    const bgMusic = new Audio('assets/audio/background-music.mp3');
+    const catchSound = new Audio('assets/audio/catch-star.mp3');
+    const gameOverSound = new Audio('assets/audio/game-over.mp3');
+    const catchHeartSound = new Audio('assets/audio/catch-heart.mp3');
+    const catchDebrisSound = new Audio('assets/audio/catch-debris.mp3');
+    bgMusic.loop = true;
+    
+    // Handle audio loading errors
+    [bgMusic, catchSound, gameOverSound, catchHeartSound, catchDebrisSound].forEach(audio => {
+        audio.addEventListener('error', () => {
+            console.warn('Audio file failed to load:', audio.src);
+        });
+    });
+
     const gameArea = document.getElementById('gameArea');
     const basket = document.getElementById('basket');
     const scoreElement = document.getElementById('score');
     const highScoreElement = document.getElementById('highScore');
+    const startScreenHighScore = document.getElementById('startScreenHighScore');
     const livesElement = document.getElementById('lives');
     const gameOverScreen = document.getElementById('gameOver');
     const finalScoreElement = document.getElementById('finalScore');
@@ -10,13 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
     const gameContent = document.querySelector('.game-content');
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettingsButton = document.getElementById('closeSettingsButton');
+    const musicVolume = document.getElementById('musicVolume');
+    const sfxVolume = document.getElementById('sfxVolume');
 
     let score = 0;
     let lives = 5;
     let gameSpeed = 2;
     let spawnRate = 2000;
     let lastSpawnTime = 0;
-    let gameLoop;
+
     let stars = [];
     let basketPosition = gameArea.clientWidth / 2;
     let targetBasketPosition = basketPosition;
@@ -24,10 +45,46 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false;
     let highScore = parseInt(localStorage.getItem('highScore')) || 0;
     highScoreElement.textContent = highScore;
+    startScreenHighScore.textContent = highScore;
+
+    // Initialize audio volumes
+    const savedMusicVolume = localStorage.getItem('musicVolume') || 0.5;
+    const savedSfxVolume = localStorage.getItem('sfxVolume') || 0.5;
+    if (musicVolume) {
+        musicVolume.value = savedMusicVolume;
+    }
+    if (sfxVolume) {
+        sfxVolume.value = savedSfxVolume;
+    }
+    bgMusic.volume = savedMusicVolume;
+    catchSound.volume = savedSfxVolume;
+    gameOverSound.volume = savedSfxVolume;
+    catchHeartSound.volume = savedSfxVolume;
+    catchDebrisSound.volume = savedSfxVolume;
+
+    // Handle volume changes
+    if (musicVolume) {
+        musicVolume.addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            bgMusic.volume = volume;
+            localStorage.setItem('musicVolume', volume);
+        });
+    }
+
+    if (sfxVolume) {
+        sfxVolume.addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            catchSound.volume = volume;
+            gameOverSound.volume = volume;
+            catchHeartSound.volume = volume;
+            catchDebrisSound.volume = volume;
+            localStorage.setItem('sfxVolume', volume);
+        });
+    }
 
     function updateBasketPosition(e) {
         if (isGameOver) return;
-        const speed = 15;
+        const speed = 20; // Increased speed for better responsiveness
         const gameAreaRect = gameArea.getBoundingClientRect();
         const basketWidth = basket.offsetWidth;
 
@@ -36,7 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const rect = gameArea.getBoundingClientRect();
             const relativeX = clientX - rect.left;
-            targetBasketPosition = Math.max(0, Math.min(relativeX, gameAreaRect.width - basketWidth));
+            // Center the basket on the touch/mouse position
+            targetBasketPosition = Math.max(basketWidth/2, Math.min(relativeX, gameAreaRect.width - basketWidth/2)) - basketWidth/2;
         } else if (e.type === 'keydown') {
             if (e.key === 'ArrowLeft') {
                 targetBasketPosition = Math.max(targetBasketPosition - speed, 0);
@@ -47,9 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function smoothBasketMovement() {
-        const easing = 0.15;
+        const easing = 0.2; // Increased easing for more responsive movement
         const distance = targetBasketPosition - basketPosition;
-        basketVelocity = basketVelocity * 0.8 + distance * easing;
+        basketVelocity = basketVelocity * 0.7 + distance * easing; // Slightly less dampening
         basketPosition += basketVelocity;
         basket.style.left = basketPosition + 'px';
         
@@ -71,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const debris = document.createElement('div');
         debris.className = 'debris';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const debrisWidth = 40;
+        const debrisWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
         debris.style.left = randomX + 'px';
         debris.style.top = '0px';
@@ -91,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dangerousDebris = document.createElement('div');
         dangerousDebris.className = 'dangerous-debris';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const debrisWidth = 40;
+        const debrisWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - debrisWidth - 10) + 5;
         dangerousDebris.style.left = randomX + 'px';
         dangerousDebris.style.top = '0px';
@@ -111,9 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createHeart() {
         const heart = document.createElement('div');
         heart.className = 'heart';
-        heart.innerHTML = '<img src="assets/images/heart.svg" width="30" height="30">';
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const heartWidth = 30;
+        const heartWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - heartWidth - 10) + 5;
         heart.style.left = randomX + 'px';
         heart.style.top = '0px';
@@ -135,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const starType = starTypes[Math.floor(Math.random() * starTypes.length)];
         star.className = `star star-${starType}`;
         const gameAreaRect = gameArea.getBoundingClientRect();
-        const starWidth = 30;
+        const starWidth = window.innerWidth <= 480 ? 24 : (window.innerWidth <= 768 ? 28 : 30);
         const randomX = Math.random() * (gameAreaRect.width - starWidth - 10) + 5;
         star.style.left = randomX + 'px';
         star.style.top = '0px';
@@ -223,15 +280,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (star.isHeart) {
                     lives++;
                     livesElement.textContent = lives;
+                    catchHeartSound.play().catch(() => {});
                 } else if (star.isDebris) {
                     score = Math.max(0, score + star.points);
                     scoreElement.textContent = score;
+                    catchDebrisSound.play().catch(() => {});
                 } else {
                     score += star.points;
                     scoreElement.textContent = score;
                     increaseDifficulty();
+                    catchSound.play().catch(() => {});
                 }
-                catchSound.play();
                 return false;
             }
             return true;
@@ -253,27 +312,12 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         bgMusic.pause();
         bgMusic.currentTime = 0;
-        gameOverSound.play();
+        gameOverSound.play().catch(() => {});
         finalScoreElement.textContent = score;
         gameOverScreen.classList.remove('hidden');
-
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('highScore', highScore);
-            highScoreElement.textContent = highScore;
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        }
+        // Show settings button when game ends
+        settingsButton.classList.remove('hidden');
     }
-
-    const bgMusic = new Audio('assets/audio/background-music.mp3');
-const catchSound = new Audio('assets/audio/catch-star.mp3');
-const gameOverSound = new Audio('assets/audio/game-over.mp3');
-
-bgMusic.loop = true;
 
 function startGame() {
         score = 0;
@@ -288,19 +332,89 @@ function startGame() {
         gameOverScreen.classList.add('hidden');
         startScreen.classList.add('hidden');
         gameContent.classList.remove('hidden');
+        // Hide settings button when game starts
+        settingsButton.classList.add('hidden');
         lastSpawnTime = Date.now();
         lastHeartSpawnTime = Date.now();
         lastDebrisSpawnTime = Date.now();
         lastDangerousDebrisSpawnTime = Date.now();
-        bgMusic.play();
+        bgMusic.play().catch(() => {});
         requestAnimationFrame(updateGame);
         requestAnimationFrame(smoothBasketMovement);
     }
 
+    const homeButton = document.getElementById('homeButton');
+    homeButton.addEventListener('click', () => {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        gameOverScreen.classList.add('hidden');
+        gameContent.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+        // Show settings button when returning to home screen
+        settingsButton.classList.remove('hidden');
+    });
+
     document.addEventListener('keydown', updateBasketPosition);
     gameArea.addEventListener('mousemove', updateBasketPosition);
     gameArea.addEventListener('touchmove', updateBasketPosition, { passive: false });
-    gameArea.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+    gameArea.addEventListener('touchstart', updateBasketPosition, { passive: false });
+    gameArea.addEventListener('touchend', e => e.preventDefault(), { passive: false });
+    
+    // Prevent context menu on long touch
+    gameArea.addEventListener('contextmenu', e => e.preventDefault());
+    
+    // Handle window resize for responsive gameplay
+    window.addEventListener('resize', () => {
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        const basketWidth = basket.offsetWidth;
+        if (basketPosition > gameAreaRect.width - basketWidth) {
+            basketPosition = gameAreaRect.width - basketWidth;
+            targetBasketPosition = basketPosition;
+        }
+    });
+    
     restartButton.addEventListener('click', startGame);
     startButton.addEventListener('click', startGame);
+    
+    // Handle settings modal
+    function openSettingsModal() {
+        settingsModal.classList.remove('hidden');
+        // Pause game if it's running
+        if (!isGameOver && !startScreen.classList.contains('hidden') === false) {
+            // Game is running, we might want to pause it
+        }
+    }
+    
+    function closeSettingsModal() {
+        settingsModal.classList.add('hidden');
+    }
+    
+    // Settings button click handler
+    if (settingsButton) {
+        settingsButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openSettingsModal();
+        });
+    }
+    
+    // Close settings button handler
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener('click', closeSettingsModal);
+    }
+    
+    // Close modal when clicking overlay
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal || e.target.classList.contains('settings-modal-overlay')) {
+                closeSettingsModal();
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !settingsModal.classList.contains('hidden')) {
+            closeSettingsModal();
+        }
+    });
 });
