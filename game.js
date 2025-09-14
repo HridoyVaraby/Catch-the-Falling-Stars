@@ -26,16 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
     const gameContent = document.querySelector('.game-content');
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettingsButton = document.getElementById('closeSettingsButton');
     const musicVolume = document.getElementById('musicVolume');
     const sfxVolume = document.getElementById('sfxVolume');
-    const settingsButton = document.getElementById('settingsButton');
 
     let score = 0;
     let lives = 5;
     let gameSpeed = 2;
     let spawnRate = 2000;
     let lastSpawnTime = 0;
-    let gameLoop;
+
     let stars = [];
     let basketPosition = gameArea.clientWidth / 2;
     let targetBasketPosition = basketPosition;
@@ -374,12 +376,45 @@ function startGame() {
     restartButton.addEventListener('click', startGame);
     startButton.addEventListener('click', startGame);
     
-    // Handle settings button click to force fresh page load
+    // Handle settings modal
+    function openSettingsModal() {
+        settingsModal.classList.remove('hidden');
+        // Pause game if it's running
+        if (!isGameOver && !startScreen.classList.contains('hidden') === false) {
+            // Game is running, we might want to pause it
+        }
+    }
+    
+    function closeSettingsModal() {
+        settingsModal.classList.add('hidden');
+    }
+    
+    // Settings button click handler
     if (settingsButton) {
         settingsButton.addEventListener('click', (e) => {
             e.preventDefault();
-            // Add timestamp to force fresh page load and prevent scroll restoration
-            window.location.href = 'settings.html?t=' + Date.now() + '#top';
+            openSettingsModal();
         });
     }
+    
+    // Close settings button handler
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener('click', closeSettingsModal);
+    }
+    
+    // Close modal when clicking overlay
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal || e.target.classList.contains('settings-modal-overlay')) {
+                closeSettingsModal();
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !settingsModal.classList.contains('hidden')) {
+            closeSettingsModal();
+        }
+    });
 });

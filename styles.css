@@ -719,6 +719,299 @@ input[type="range"]::-webkit-slider-thumb:hover {
     }
 }
 
+/* Settings Modal Styles */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.settings-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.settings-modal-content {
+    position: relative;
+    width: calc(100% - 32px);
+    max-width: 500px;
+    max-height: 90vh;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.settings-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.settings-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.close-settings-button {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-settings-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.close-settings-button svg {
+    width: 18px;
+    height: 18px;
+    stroke: #FFD700;
+}
+
+.settings-modal-body {
+    padding: 24px;
+    max-height: calc(90vh - 100px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 215, 0, 0.3) transparent;
+}
+
+.settings-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.settings-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.settings-modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.3);
+    border-radius: 3px;
+}
+
+.settings-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-section:last-child {
+    margin-bottom: 0;
+}
+
+.settings-section h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.settings-section h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.settings-section .space-y-3 > * + * {
+    margin-top: 12px;
+}
+
+.settings-section ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.settings-section li {
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+/* Modal animations */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Mobile responsive adjustments for modal */
+@media screen and (max-width: 480px) {
+    .settings-modal-content {
+        width: calc(100% - 16px);
+        max-height: 95vh;
+        border-radius: 16px;
+    }
+    
+    .settings-modal-header {
+        padding: 16px 20px;
+    }
+    
+    .settings-modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .settings-modal-body {
+        padding: 20px;
+        max-height: calc(95vh - 80px);
+    }
+    
+    .settings-section {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .settings-section h3 {
+        font-size: 16px;
+    }
+    
+    .settings-section h4 {
+        font-size: 13px;
+    }
+}
+
+/* Settings Modal Styles */
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.settings-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.settings-modal-content {
+    position: relative;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: white;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@media screen and (min-width: 481px) {
+    .settings-modal-content {
+        max-width: 500px;
+        max-height: 80vh;
+    }
+}
+
+.settings-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-modal-body {
+    padding: 20px;
+}
+
+.close-settings-button {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-settings-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.close-settings-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: #FFD700;
+}
+
+.settings-modal .settings-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-modal .settings-section:last-child {
+    margin-bottom: 0;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 /* High DPI displays */
 @media screen and (-webkit-min-device-pixel-ratio: 2),
        screen and (min-resolution: 192dpi) {

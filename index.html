@@ -13,12 +13,12 @@
 </head>
 <body>
     <div class="game-container">
-        <a href="settings.html?t=" id="settingsButton" class="settings-button" title="Game Settings" aria-label="Open game settings">
+        <button id="settingsButton" class="settings-button" title="Game Settings" aria-label="Open game settings">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
             </svg>
-        </a>
+        </button>
         <div id="startScreen" class="backdrop-blur-lg bg-black/30 p-8 rounded-2xl border border-white/20 shadow-2xl">
             <h1 class="text-4xl font-bold mb-6 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 text-transparent bg-clip-text">Catch the Falling Stars</h1>
             
@@ -47,6 +47,75 @@
             </div>
         </div>
     </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal hidden">
+        <div class="settings-modal-overlay"></div>
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 text-transparent bg-clip-text">Game Settings</h2>
+                <button id="closeSettingsButton" class="close-settings-button" aria-label="Close settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="settings-modal-body">
+                <div class="settings-section">
+                    <h3 class="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">Audio Settings</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between px-3 py-2 bg-white/10 rounded-lg">
+                            <label class="text-white/90 text-sm" for="musicVolume">Music Volume</label>
+                            <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="0.5" class="w-24">
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white/10 rounded-lg">
+                            <label class="text-white/90 text-sm" for="sfxVolume">Sound Effects</label>
+                            <input type="range" id="sfxVolume" min="0" max="1" step="0.1" value="0.5" class="w-24">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">How to Play</h3>
+                    <div class="space-y-3 text-white/80 text-sm">
+                        <div class="p-3 bg-white/10 rounded-lg">
+                            <h4 class="font-semibold mb-2 text-white">Basic Controls</h4>
+                            <ul class="list-disc list-inside space-y-1 text-xs">
+                                <li>Use <span class="text-yellow-400">Left and Right Arrow Keys</span> to move the basket</li>
+                                <li>Alternatively, use your <span class="text-yellow-400">Mouse</span> to control the basket movement</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-3 bg-white/10 rounded-lg">
+                            <h4 class="font-semibold mb-2 text-white">Game Elements</h4>
+                            <ul class="list-disc list-inside space-y-1 text-xs">
+                                <li>🌟 <span class="text-yellow-400">Gold Stars</span> - Basic points (1 point)</li>
+                                <li>🌟 <span class="text-blue-400">Blue Stars</span> - Double points (2 points)</li>
+                                <li>🌟 <span class="text-red-400">Red Stars</span> - Triple points (3 points)</li>
+                                <li>🌟 <span class="text-purple-400">Purple Stars</span> - Double points (2 points)</li>
+                                <li>💖 <span class="text-pink-400">Hearts</span> - Extra life</li>
+                                <li>⚠️ <span class="text-gray-400">Space Debris</span> - Reduces points (-2 points)</li>
+                                <li>☠️ <span class="text-red-600">Dangerous Debris</span> - Heavy point loss (-4 points)</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-lg">
+                            <h4 class="font-semibold mb-2 text-white">Tips & Strategies</h4>
+                            <ul class="list-disc list-inside space-y-1 text-xs">
+                                <li>Focus on catching valuable stars while avoiding debris</li>
+                                <li>Keep an eye on your lives - catch hearts when your lives are low</li>
+                                <li>The game speed increases as you score more points</li>
+                                <li>Try to maintain a steady position and make calculated movements</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="game.js"></script>
 </body>
