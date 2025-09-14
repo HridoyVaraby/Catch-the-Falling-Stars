@@ -3,10 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgMusic = new Audio('assets/audio/background-music.mp3');
     const catchSound = new Audio('assets/audio/catch-star.mp3');
     const gameOverSound = new Audio('assets/audio/game-over.mp3');
+    const catchHeartSound = new Audio('assets/audio/catch-heart.mp3');
+    const catchDebrisSound = new Audio('assets/audio/catch-debris.mp3');
     bgMusic.loop = true;
     
     // Handle audio loading errors
-    [bgMusic, catchSound, gameOverSound].forEach(audio => {
+    [bgMusic, catchSound, gameOverSound, catchHeartSound, catchDebrisSound].forEach(audio => {
         audio.addEventListener('error', () => {
             console.warn('Audio file failed to load:', audio.src);
         });
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContent = document.querySelector('.game-content');
     const musicVolume = document.getElementById('musicVolume');
     const sfxVolume = document.getElementById('sfxVolume');
+    const settingsButton = document.getElementById('settingsButton'); // Added settings button reference
 
     let score = 0;
     let lives = 5;
@@ -54,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     bgMusic.volume = savedMusicVolume;
     catchSound.volume = savedSfxVolume;
     gameOverSound.volume = savedSfxVolume;
+    catchHeartSound.volume = savedSfxVolume;
+    catchDebrisSound.volume = savedSfxVolume;
 
     // Handle volume changes
     if (musicVolume) {
@@ -69,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const volume = parseFloat(e.target.value);
             catchSound.volume = volume;
             gameOverSound.volume = volume;
+            catchHeartSound.volume = volume;
+            catchDebrisSound.volume = volume;
             localStorage.setItem('sfxVolume', volume);
         });
     }
@@ -271,15 +278,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (star.isHeart) {
                     lives++;
                     livesElement.textContent = lives;
+                    catchHeartSound.play().catch(() => {});
                 } else if (star.isDebris) {
                     score = Math.max(0, score + star.points);
                     scoreElement.textContent = score;
+                    catchDebrisSound.play().catch(() => {});
                 } else {
                     score += star.points;
                     scoreElement.textContent = score;
                     increaseDifficulty();
+                    catchSound.play().catch(() => {});
                 }
-                catchSound.play().catch(() => {});
                 return false;
             }
             return true;
@@ -304,17 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gameOverSound.play().catch(() => {});
         finalScoreElement.textContent = score;
         gameOverScreen.classList.remove('hidden');
-
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('highScore', highScore);
-            highScoreElement.textContent = highScore;
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        }
+        // Show settings button when game ends
+        settingsButton.classList.remove('hidden');
     }
 
 function startGame() {
@@ -330,6 +330,8 @@ function startGame() {
         gameOverScreen.classList.add('hidden');
         startScreen.classList.add('hidden');
         gameContent.classList.remove('hidden');
+        // Hide settings button when game starts
+        settingsButton.classList.add('hidden');
         lastSpawnTime = Date.now();
         lastHeartSpawnTime = Date.now();
         lastDebrisSpawnTime = Date.now();
@@ -346,6 +348,8 @@ function startGame() {
         gameOverScreen.classList.add('hidden');
         gameContent.classList.add('hidden');
         startScreen.classList.remove('hidden');
+        // Show settings button when returning to home screen
+        settingsButton.classList.remove('hidden');
     });
 
     document.addEventListener('keydown', updateBasketPosition);
