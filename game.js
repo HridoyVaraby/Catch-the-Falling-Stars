@@ -1,8 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Create audio elements
+    const bgMusic = new Audio('assets/audio/background-music.mp3');
+    const catchSound = new Audio('assets/audio/catch-star.mp3');
+    const gameOverSound = new Audio('assets/audio/game-over.mp3');
+    bgMusic.loop = true;
+
     const gameArea = document.getElementById('gameArea');
     const basket = document.getElementById('basket');
     const scoreElement = document.getElementById('score');
     const highScoreElement = document.getElementById('highScore');
+    const startScreenHighScore = document.getElementById('startScreenHighScore');
     const livesElement = document.getElementById('lives');
     const gameOverScreen = document.getElementById('gameOver');
     const finalScoreElement = document.getElementById('finalScore');
@@ -10,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
     const gameContent = document.querySelector('.game-content');
+    const musicVolume = document.getElementById('musicVolume');
+    const sfxVolume = document.getElementById('sfxVolume');
 
     let score = 0;
     let lives = 5;
@@ -24,6 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false;
     let highScore = parseInt(localStorage.getItem('highScore')) || 0;
     highScoreElement.textContent = highScore;
+    startScreenHighScore.textContent = highScore;
+
+    // Initialize audio volumes
+    const savedMusicVolume = localStorage.getItem('musicVolume') || 0.5;
+    const savedSfxVolume = localStorage.getItem('sfxVolume') || 0.5;
+    musicVolume.value = savedMusicVolume;
+    sfxVolume.value = savedSfxVolume;
+    bgMusic.volume = savedMusicVolume;
+    catchSound.volume = savedSfxVolume;
+    gameOverSound.volume = savedSfxVolume;
+
+    // Handle volume changes
+    musicVolume.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value);
+        bgMusic.volume = volume;
+        localStorage.setItem('musicVolume', volume);
+    });
+
+    sfxVolume.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value);
+        catchSound.volume = volume;
+        gameOverSound.volume = volume;
+        localStorage.setItem('sfxVolume', volume);
+    });
 
     function updateBasketPosition(e) {
         if (isGameOver) return;
@@ -268,12 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
-    const bgMusic = new Audio('assets/audio/background-music.mp3');
-const catchSound = new Audio('assets/audio/catch-star.mp3');
-const gameOverSound = new Audio('assets/audio/game-over.mp3');
-
-bgMusic.loop = true;
 
 function startGame() {
         score = 0;

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Settings - Catch the Falling Stars</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+        .settings-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Back to Game</a>
+    <div class="settings-container">
+        <h1 class="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 text-transparent bg-clip-text">Game Settings</h1>
+        
+        <div class="settings-section">
+            <h2 class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">Audio Settings</h2>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between px-4 py-2 bg-white/10 rounded-lg">
+                    <label class="text-white/90">Music Volume</label>
+                    <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="0.5" class="w-32">
+                </div>
+                <div class="flex items-center justify-between px-4 py-2 bg-white/10 rounded-lg">
+                    <label class="text-white/90">Sound Effects</label>
+                    <input type="range" id="sfxVolume" min="0" max="1" step="0.1" value="0.5" class="w-32">
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2 class="text-2xl font-semibold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">How to Play</h2>
+            <div class="space-y-4 text-white/80">
+                <div class="p-4 bg-white/10 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Basic Controls</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Use <span class="text-yellow-400">Left and Right Arrow Keys</span> to move the basket</li>
+                        <li>Alternatively, use your <span class="text-yellow-400">Mouse</span> to control the basket movement</li>
+                    </ul>
+                </div>
+                
+                <div class="p-4 bg-white/10 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Game Elements</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>🌟 <span class="text-yellow-400">Gold Stars</span> - Basic points (1 point)</li>
+                        <li>🌟 <span class="text-blue-400">Blue Stars</span> - Double points (2 points)</li>
+                        <li>🌟 <span class="text-red-400">Red Stars</span> - Triple points (3 points)</li>
+                        <li>🌟 <span class="text-purple-400">Purple Stars</span> - Double points (2 points)</li>
+                        <li>💖 <span class="text-pink-400">Hearts</span> - Extra life</li>
+                        <li>⚠️ <span class="text-gray-400">Space Debris</span> - Reduces points (-2 points)</li>
+                        <li>☠️ <span class="text-red-600">Dangerous Debris</span> - Heavy point loss (-4 points)</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-white/10 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Tips & Strategies</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Focus on catching valuable stars while avoiding debris</li>
+                        <li>Keep an eye on your lives - catch hearts when your lives are low</li>
+                        <li>The game speed increases as you score more points</li>
+                        <li>Try to maintain a steady position and make calculated movements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="settings.js"></script>
+</body>
+</html>
