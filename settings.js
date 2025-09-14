@@ -20,4 +20,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const volume = parseFloat(e.target.value);
         localStorage.setItem('sfxVolume', volume);
     });
-}));
+});

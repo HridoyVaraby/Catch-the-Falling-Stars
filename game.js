@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const catchSound = new Audio('assets/audio/catch-star.mp3');
     const gameOverSound = new Audio('assets/audio/game-over.mp3');
     bgMusic.loop = true;
+    
+    // Handle audio loading errors
+    [bgMusic, catchSound, gameOverSound].forEach(audio => {
+        audio.addEventListener('error', () => {
+            console.warn('Audio file failed to load:', audio.src);
+        });
+    });
 
     const gameArea = document.getElementById('gameArea');
     const basket = document.getElementById('basket');
@@ -38,25 +45,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize audio volumes
     const savedMusicVolume = localStorage.getItem('musicVolume') || 0.5;
     const savedSfxVolume = localStorage.getItem('sfxVolume') || 0.5;
-    musicVolume.value = savedMusicVolume;
-    sfxVolume.value = savedSfxVolume;
+    if (musicVolume) {
+        musicVolume.value = savedMusicVolume;
+    }
+    if (sfxVolume) {
+        sfxVolume.value = savedSfxVolume;
+    }
     bgMusic.volume = savedMusicVolume;
     catchSound.volume = savedSfxVolume;
     gameOverSound.volume = savedSfxVolume;
 
     // Handle volume changes
-    musicVolume.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        bgMusic.volume = volume;
-        localStorage.setItem('musicVolume', volume);
-    });
+    if (musicVolume) {
+        musicVolume.addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            bgMusic.volume = volume;
+            localStorage.setItem('musicVolume', volume);
+        });
+    }
 
-    sfxVolume.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        catchSound.volume = volume;
-        gameOverSound.volume = volume;
-        localStorage.setItem('sfxVolume', volume);
-    });
+    if (sfxVolume) {
+        sfxVolume.addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            catchSound.volume = volume;
+            gameOverSound.volume = volume;
+            localStorage.setItem('sfxVolume', volume);
+        });
+    }
 
     function updateBasketPosition(e) {
         if (isGameOver) return;
@@ -264,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     scoreElement.textContent = score;
                     increaseDifficulty();
                 }
-                catchSound.play();
+                catchSound.play().catch(() => {});
                 return false;
             }
             return true;
@@ -286,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         bgMusic.pause();
         bgMusic.currentTime = 0;
-        gameOverSound.play();
+        gameOverSound.play().catch(() => {});
         finalScoreElement.textContent = score;
         gameOverScreen.classList.remove('hidden');
 
@@ -319,7 +334,7 @@ function startGame() {
         lastHeartSpawnTime = Date.now();
         lastDebrisSpawnTime = Date.now();
         lastDangerousDebrisSpawnTime = Date.now();
-        bgMusic.play();
+        bgMusic.play().catch(() => {});
         requestAnimationFrame(updateGame);
         requestAnimationFrame(smoothBasketMovement);
     }
