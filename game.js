@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let basketVelocity = 0;
     let isGameOver = false;
     let highScore = parseInt(localStorage.getItem('highScore')) || 0;
+    let hasShownHighScoreCelebration = false; // Track if high score celebration was shown this game
     highScoreElement.textContent = highScore;
     startScreenHighScore.textContent = highScore;
 
@@ -301,6 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     score += star.points;
                     scoreElement.textContent = score;
+                    
+                    // Check for new high score
+                    checkHighScore();
+                    
                     increaseDifficulty();
                     catchSound.play().catch(() => {});
                 }
@@ -314,6 +319,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function checkHighScore() {
+        if (score > highScore) {
+            const isFirstTimeBeatingHighScore = !hasShownHighScoreCelebration;
+            
+            highScore = score;
+            highScoreElement.textContent = highScore;
+            startScreenHighScore.textContent = highScore;
+            localStorage.setItem('highScore', highScore);
+            
+            // Only show celebration the first time high score is beaten in this game
+            if (isFirstTimeBeatingHighScore) {
+                hasShownHighScoreCelebration = true;
+                
+                // Add visual feedback for new high score
+                showNewHighScoreMessage();
+                
+                // Trigger confetti celebration for new high score (only first time)
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#FFD700', '#FFA500', '#FF6347', '#9370DB', '#00CED1']
+                    });
+                    
+                    // Additional confetti burst after a short delay
+                    setTimeout(() => {
+                        confetti({
+                            particleCount: 50,
+                            angle: 60,
+                            spread: 55,
+                            origin: { x: 0 },
+                            colors: ['#FFD700', '#FFA500']
+                        });
+                    }, 250);
+                    
+                    setTimeout(() => {
+                        confetti({
+                            particleCount: 50,
+                            angle: 120,
+                            spread: 55,
+                            origin: { x: 1 },
+                            colors: ['#FFD700', '#FFA500']
+                        });
+                    }, 400);
+                }
+            }
+        }
+    }
+    
+    function showNewHighScoreMessage() {
+        // Create temporary "NEW HIGH SCORE!" message
+        const message = document.createElement('div');
+        message.textContent = 'NEW HIGH SCORE!';
+        message.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            pointer-events: none;
+            animation: highScoreAnimation 2s ease-out forwards;
+        `;
+        
+        // Add CSS animation
+        if (!document.getElementById('highScoreStyle')) {
+            const style = document.createElement('style');
+            style.id = 'highScoreStyle';
+            style.textContent = `
+                @keyframes highScoreAnimation {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+                    40% { transform: translate(-50%, -50%) scale(1); }
+                    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        gameArea.appendChild(message);
+        
+        // Remove message after animation
+        setTimeout(() => {
+            if (message.parentNode) {
+                message.parentNode.removeChild(message);
+            }
+        }, 2000);
+    }
+
     function increaseDifficulty() {
         if (score % 10 === 0) {
             gameSpeed += 0.1;
@@ -325,6 +423,31 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         bgMusic.pause();
         bgMusic.currentTime = 0;
+        
+        // Final high score check
+        if (score > highScore) {
+            const isFirstTimeBeatingHighScore = !hasShownHighScoreCelebration;
+            
+            highScore = score;
+            highScoreElement.textContent = highScore;
+            startScreenHighScore.textContent = highScore;
+            localStorage.setItem('highScore', highScore);
+            
+            // Special game over confetti for new high score (only if not shown during game)
+            if (isFirstTimeBeatingHighScore && typeof confetti !== 'undefined') {
+                hasShownHighScoreCelebration = true;
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.5 },
+                        colors: ['#FFD700', '#FFA500', '#FF6347', '#9370DB', '#00CED1'],
+                        shapes: ['star']
+                    });
+                }, 500);
+            }
+        }
+        
         gameOverSound.play().catch(() => {});
         finalScoreElement.textContent = score;
         gameOverScreen.classList.remove('hidden');
@@ -338,6 +461,7 @@ function startGame() {
         gameSpeed = 2;
         spawnRate = 2000;
         isGameOver = false;
+        hasShownHighScoreCelebration = false; // Reset celebration flag for new game
         stars.forEach(star => gameArea.removeChild(star.element));
         stars = [];
         scoreElement.textContent = score;
