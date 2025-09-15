@@ -75,10 +75,11 @@ body {
     font-weight: 600;
     z-index: 2;
     transition: all 0.3s ease;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
     min-height: 50px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* Tablet styles */
@@ -112,7 +113,35 @@ body {
     display: inline-block;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 16px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff !important;
+}
+
+/* Enhanced visibility for score elements */
+.game-header .score {
+    color: #fde047 !important; /* bright yellow */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 15px rgba(253, 224, 71, 0.3);
+}
+
+.game-header .high-score {
+    color: #d8b4fe !important; /* light purple */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 15px rgba(216, 180, 254, 0.3);
+}
+
+.game-header .lives {
+    color: #fca5a5 !important; /* light red */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 15px rgba(252, 165, 165, 0.3);
+}
+
+/* Make the numbers even more prominent */
+.game-header #score,
+.game-header #highScore,
+.game-header #lives {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 @media screen and (min-width: 481px) {
@@ -685,13 +714,32 @@ input[type="range"]::-webkit-slider-thumb:hover {
         min-width: 48px;
     }
     
-    /* Improved readability */
+    /* Improved readability for mobile */
     .game-header {
         font-size: 12px;
+        background: rgba(0, 0, 0, 0.9) !important;
+        padding: 10px 8px;
+        border-bottom: 2px solid rgba(255, 215, 0, 0.4);
     }
     
     .game-header > div {
         white-space: nowrap;
+        font-weight: 700;
+    }
+    
+    /* Make mobile text even more visible */
+    .game-header .score,
+    .game-header .high-score,
+    .game-header .lives {
+        font-size: 11px !important;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 1), 0 0 8px rgba(0, 0, 0, 0.8) !important;
+    }
+    
+    .game-header #score,
+    .game-header #highScore,
+    .game-header #lives {
+        font-size: 14px !important;
+        font-weight: 900 !important;
     }
     
     /* Larger touch area for basket control */

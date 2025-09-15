@@ -1,0 +1,26 @@
+{
+    "name": "Catch The Falling Stars",
+    "short_name": "Falling Stars",
+    "description": "A fun offline game where you catch falling stars and avoid debris",
+    "version": "1.0.2",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "theme_color": "#000000",
+    "background_color": "#0c0c0c",
+    "icons": [
+        {
+            "src": "assets/images/star.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "games",
+        "entertainment"
+    ],
+    "lang": "en",
+    "scope": "./",
+    "offline_enabled": true
+}
